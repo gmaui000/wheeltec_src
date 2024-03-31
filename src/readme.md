@@ -228,3 +228,48 @@ colcon build --packages-select turn_on_wheeltec_robot
 编译全部功能包
 colcon build
 注意：用户修改launch文件内容后需要编译才能生效。
+
+
+# 虚拟屏幕的创建
+～～～
+一、配置方法
+1）安装软件
+通过终端安装虚拟显示器软件，Ubuntu20.4可以用：
+
+$ sudo apt-get install xserver-xorg-core-hwe-18.04
+$ sudo apt-get install xserver-xorg-video-dummy
+
+2）添加配置文件
+在 /usr/share/X11/xorg.conf.d/ 中添加 xorg.conf 文件。
+编辑 /usr/share/X11/xorg.conf.d/xorg.conf文件，内容如下：
+
+Section "Monitor"
+  Identifier "Monitor0"
+  HorizSync 28.0-80.0
+  VertRefresh 48.0-75.0
+  Modeline "1920x1080_60.00" 172.80 1920 2040 2248 2576 1080 1081 1084 1118 -HSync +Vsync
+EndSection
+Section "Device"
+  Identifier "Card0"
+  Driver "dummy"
+  VideoRam 256000
+EndSection
+Section "Screen"
+  DefaultDepth 24
+  Identifier "Screen0"
+  Device "Card0"
+  Monitor "Monitor0"
+  SubSection "Display"
+    Depth 24
+    Modes "1920x1080_60.00"
+  EndSubSection
+EndSection
+
+注意：虽然配置上面写了 “1920x1080”，但是实际上最大支持 “1360x768”
+
+3）重启
+重启计算机后，默认使用虚拟显示器。
+使用rustdesk实现远程连接即可
+
+注意：如果需要再用显示器，需要删除或者重命名“xorg.conf”文件
+～～～
