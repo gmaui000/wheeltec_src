@@ -49,12 +49,13 @@ using namespace std;
 //Relative to the range set by the IMU gyroscope, the range is ±500°, corresponding data range is ±32768
 //The gyroscope raw data is converted in radian (rad) units, 1/65.5/57.30=0.00026644
 //与IMU陀螺仪设置的量程有关，量程±500°，对应数据范围±32768
-//陀螺仪原始数据转换位弧度(rad)单位，1/65.5/57.30=0.00026644
+//陀螺仪原始单位数据转换位弧度(rad)单位，1/65.5/57.30=0.00026644 最大数值对应最大量程（32768*0.00026644*PI*180=500）
+//其中57.30=180°/PI（也就是1弧度对应的角度数） 65.5=32768/500 （也就是量程范围内1度对应映射区间大小）
 #define GYROSCOPE_RATIO   0.00026644f
 //Relates to the range set by the IMU accelerometer, range is ±2g, corresponding data range is ±32768
 //Accelerometer original data conversion bit m/s^2 units, 32768/2g=32768/19.6=1671.84	
 //与IMU加速度计设置的量程有关，量程±2g，对应数据范围±32768
-//加速度计原始数据转换位m/s^2单位，32768/2g=32768/19.6=1671.84
+//加速度计原始单位数据转换位m/s^2单位，32768/2g=32768/19.6=1671.84
 #define ACCEl_RATIO 	  1671.84f  	
 
 extern sensor_msgs::msg::Imu Mpu6050; //External variables, IMU topic data //外部变量，IMU话题数据
@@ -145,7 +146,7 @@ class turn_on_robot : public rclcpp::Node
 		turn_on_robot();
 		~turn_on_robot(); //Destructor //析构函数
 		void Control();   //Loop control code //循环控制代码
-                void update_tfupdate_tf(geometry_msgs::msg::TransformStamped::SharedPtr odom_tf);
+        void update_tf(geometry_msgs::msg::TransformStamped::SharedPtr odom_tf);
 		void Publish_Odom();      //Pub the speedometer topic //发布里程计话题
 		serial::Serial Stm32_Serial; //Declare a serial object //声明串口对象 
 		//explicit turn_on_robot(
@@ -166,35 +167,35 @@ class turn_on_robot : public rclcpp::Node
   		rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr Cmd_Vel_Sub;
   		rclcpp::Subscription<ackermann_msgs::msg::AckermannDriveStamped>::SharedPtr Akm_Cmd_Vel_Sub;
 
-                rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_publisher;         // CHANGE
-                rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr voltage_publisher;         // CHANGE
-                rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_publisher;         // CHANGE
+        rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr odom_publisher;         // CHANGE
+        rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr voltage_publisher;         // CHANGE
+        rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_publisher;         // CHANGE
 
-                rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr test_publisher;         // CHANGE
+        rclcpp::Publisher<std_msgs::msg::Float32>::SharedPtr test_publisher;         // CHANGE
 
-                rclcpp::Publisher<wheeltec_robot_msg::msg::Data>::SharedPtr robotpose_publisher;         // CHANGE
-                rclcpp::Publisher<wheeltec_robot_msg::msg::Data>::SharedPtr robotvel_publisher;         // CHANGE
-                rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr tf_pub_;
+        rclcpp::Publisher<wheeltec_robot_msg::msg::Data>::SharedPtr robotpose_publisher;         // CHANGE
+        rclcpp::Publisher<wheeltec_robot_msg::msg::Data>::SharedPtr robotvel_publisher;         // CHANGE
+        rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr tf_pub_;
 
-                std::shared_ptr<tf2_ros::TransformBroadcaster> tf_bro;
-                rclcpp::TimerBase::SharedPtr test_timer;
+        std::shared_ptr<tf2_ros::TransformBroadcaster> tf_bro;
+        rclcpp::TimerBase::SharedPtr test_timer;
 
-                rclcpp::TimerBase::SharedPtr odom_timer;
-                rclcpp::TimerBase::SharedPtr imu_timer;
-                rclcpp::TimerBase::SharedPtr voltage_timer;
+        rclcpp::TimerBase::SharedPtr odom_timer;
+        rclcpp::TimerBase::SharedPtr imu_timer;
+        rclcpp::TimerBase::SharedPtr voltage_timer;
 
-                rclcpp::TimerBase::SharedPtr robotpose_timer;
-                rclcpp::TimerBase::SharedPtr robotvel_timer;
+        rclcpp::TimerBase::SharedPtr robotpose_timer;
+        rclcpp::TimerBase::SharedPtr robotvel_timer;
 
-                std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
+        std::unique_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
 
-                void declare_parameters();
-                void get_parameters();
+        void declare_parameters();
+        void get_parameters();
 
 
-                void Cmd_Vel_Callback(const geometry_msgs::msg::Twist::SharedPtr twist_aux);
-                void Akm_Cmd_Vel_Callback(const ackermann_msgs::msg::AckermannDriveStamped::SharedPtr akm_ctl);
-                //void Akm_Cmd_Vel_Callback(const geometry_msgs::msg::Twist::SharedPtr twist_aux);
+        void Cmd_Vel_Callback(const geometry_msgs::msg::Twist::SharedPtr twist_aux);
+        void Akm_Cmd_Vel_Callback(const ackermann_msgs::msg::AckermannDriveStamped::SharedPtr akm_ctl);
+        //void Akm_Cmd_Vel_Callback(const geometry_msgs::msg::Twist::SharedPtr twist_aux);
 		void Publish_ImuSensor(); //Pub the IMU sensor topic //发布IMU传感器话题
 		void Publish_Voltage();   //Pub the power supply voltage topic //发布电源电压话题
 		auto createQuaternionMsgFromYaw(double yaw);

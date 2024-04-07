@@ -1,22 +1,26 @@
+# 2024.04.04
+
+1. 打开底盘控制
+ros2 launch turn_on_wheeltec_robot turn_on_wheeltec_robot.launch.py
+2. 打开键盘控制
+ros2 run wheeltec_robot_keyboard wheeltec_keyboard
+3. WEB浏览器显示摄像头
+step1：打开相机
+ros2 launch usb_cam usb_cam_launch.py
+step2：
+ros2 run web_video_server web_video_server
+step3:
+浏览器输入：192.168.0.131:8080
+4. 打开雷达
+ros2 launch turn_on_wheeltec_robot wheeltec_lidar.launch.py
+
+
+
 2023.12.26更新
 
 NFS挂载
 sudo mount -t nfs 192.168.0.100:/home/wheeltec/wheeltec_ros2/ /mnt
 
-1、打开机器人底盘
-ros2 launch turn_on_wheeltec_robot turn_on_wheeltec_robot.launch.py
-
-2、打开底盘控制
-ros2 launch turn_on_wheeltec_robot turn_on_wheeltec_robot.launch.py
-
-3、打开相机
-ros2 launch turn_on_wheeltec_robot wheeltec_camera.launch.py
-
-4、打开雷达
-ros2 launch turn_on_wheeltec_robot wheeltec_lidar.launch.py
-
-5、打开键盘控制
-ros2 run wheeltec_robot_keyboard wheeltec_keyboard 
 
 6、简单跟随功能
 ① 雷达跟随
@@ -52,12 +56,6 @@ step1：打开小车底层节点
 ros2 launch wheeltec_mic_ros2 base.launch.py
 step2：初始化M2麦克风阵列
 ros2 launch wheeltec_mic_ros2 mic_init.launch.py
-
-12、WEB浏览器显示摄像头
-step1：打开相机
-ros2 launch turn_on_wheeltec_robot wheeltec_camera.launch.py
-step2：
-ros2 run web_video_server web_video_server
 
 13、USB手柄控制
 ros2 launch wheeltec_joy wheeltec_joy.launch.py
