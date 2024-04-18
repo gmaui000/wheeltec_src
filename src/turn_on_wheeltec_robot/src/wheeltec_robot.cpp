@@ -404,6 +404,24 @@ void turn_on_robot::Control()
     if (true == Get_Sensor_Data()) 
                                    
     {
+      // 小车的位姿主要是以Z轴做旋转转换矩阵如下：
+      //    | Y
+      //    |      M'(x',y')
+      //    |    /     / M (x,y)
+      //    |   /    /
+      //    |  /   /
+      //    | / α/
+      //    |/ / β
+      //    O --------------------
+      //                         X
+      //    旋转公式为 x' = |OM'|cos(α+β) = |OM|(cosαcosβ - sinαsinβ) = xcosα - ysinβ
+      //             y' = |OM'|sin(α+β) = |OM|(sinαcosβ + cosαsinβ) = xsinα + ycosα
+      //
+      // 参考https://mp.weixin.qq.com/s?__biz=MzU2NjU3OTc5NA==&mid=2247570571&idx=2&sn=7396aa3280dc063d2ca12f62e1c198b0&chksm=fca9d3b6cbde5aa08f73a040bc6153b16dc7261654358e56e576141f6994e1c4533fd66ee941&scene=27
+
+      // |Xt+1|   |Xt|   |VxcosZt - VysinZt|
+      // |Yt+1| = |Yt| + |VxsinZt + VycosZt| dt
+      // |Zt+1|   |Zt|   |       Vz        |
       //Calculate the displacement in the X direction, unit: m //计算X方向的位移，单位：m
       Robot_Pos.X+=(Robot_Vel.X * cos(Robot_Pos.Z) - Robot_Vel.Y * sin(Robot_Pos.Z)) * Sampling_Time;
       //Calculate the displacement in the Y direction, unit: m //计算Y方向的位移，单位：m 

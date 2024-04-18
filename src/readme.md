@@ -15,6 +15,11 @@ step3:
 ros2 launch turn_on_wheeltec_robot wheeltec_lidar.launch.py
 
 
+# 代码的深入理解
+
+1. 自带文档  3.ROS开发手册/2.STM32运动底盘开发手册_ROS教育机器人.pdf
+2. https://blog.csdn.net/hbsyaaa/article/details/108186892
+3. https://blog.csdn.net/lz20120808/article/details/50809397
 
 2023.12.26更新
 
