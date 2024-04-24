@@ -497,13 +497,8 @@ void AstraDriver::imageConnectCb() {
   bool ir_started = device_->isIRStreamStarted();
   bool color_started = device_->isColorStreamStarted();
 
-  // ir_subscribers_ = pub_ir_.getNumSubscribers() > 0;
-  // color_subscribers_ = pub_color_.getNumSubscribers() > 0;
-
-  // ir_subscribers_ = false;
-  // color_subscribers_ = true;
-  ir_subscribers_ = true;
-  color_subscribers_ = false;
+  ir_subscribers_ = pub_ir_.getNumSubscribers() > 0;
+  color_subscribers_ = pub_color_.getNumSubscribers() > 0;
 
   if (color_subscribers_ && (!ir_subscribers_ || config_.rgb_preferred)) {
     if (ir_subscribers_)
@@ -563,8 +558,8 @@ void AstraDriver::depthConnectCb() {
   projector_info_subscribers_ =
       pub_projector_info_->get_subscription_count() > 0;
 
-  bool need_depth = true;
   // bool need_depth = depth_subscribers_ || depth_raw_subscribers_;
+  bool need_depth = true;
 
   if (need_depth && !device_->isDepthStreamStarted()) {
     device_->setDepthFrameCallback(std::bind(
