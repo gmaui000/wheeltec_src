@@ -58,7 +58,9 @@ Function: The speed topic subscription Callback function, according to the subsc
 void turn_on_robot::Akm_Cmd_Vel_Callback(const ackermann_msgs::msg::AckermannDriveStamped::SharedPtr akm_ctl) 
 {
   short  transition;  //intermediate variable //中间变量
-  if(akm_cmd_vel=="ackermann_cmd") {RCLCPP_INFO(this->get_logger(),"is akm");} //Prompt message //提示信息
+  if(akm_cmd_vel=="ackermann_cmd") {
+    //RCLCPP_INFO(this->get_logger(),"is akm");
+  } //Prompt message //提示信息
   Send_Data.tx[0]=FRAME_HEADER; //frame head 0x7B //帧头0X7BAkm_Cmd_Vel_Sub
   Send_Data.tx[1] = 0; //set aside //预留位
   Send_Data.tx[2] = 0; //set aside //预留位
@@ -89,7 +91,7 @@ void turn_on_robot::Akm_Cmd_Vel_Callback(const ackermann_msgs::msg::AckermannDri
 
   try
   { 
- Stm32_Serial.write(Send_Data.tx,sizeof (Send_Data.tx)); //Sends data to the downloader via serial port //通过串口向下位机发送数据 
+    Stm32_Serial.write(Send_Data.tx,sizeof (Send_Data.tx)); //Sends data to the downloader via serial port //通过串口向下位机发送数据
   }
   catch (serial::IOException& e)   
   {
