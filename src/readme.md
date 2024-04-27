@@ -1,25 +1,32 @@
 # 2024.04.04
 
 1. 打开底盘控制
-ros2 launch turn_on_wheeltec_robot turn_on_wheeltec_robot.launch.py
+       ros2 launch turn_on_wheeltec_robot turn_on_wheeltec_robot.launch.py
 2. 打开键盘控制
-ros2 run wheeltec_robot_keyboard wheeltec_keyboard
+       ros2 run wheeltec_robot_keyboard wheeltec_keyboard
 3. WEB浏览器显示摄像头
-step1：打开相机
-ros2 launch usb_cam usb_cam_launch.py
+step1：
+       打开usb相机
+       ros2 launch usb_cam usb_cam_launch.py
+       打开Astra Pro A相机
+       ros2 launch ros2_astra_camera astra_pro_launch.py
 step2：
-ros2 run web_video_server web_video_server
+       ros2 run web_video_server web_video_server
 step3:
-浏览器输入：192.168.0.131:8080
+       浏览器输入：192.168.0.131:8080
 4. 打开雷达
-ros2 launch turn_on_wheeltec_robot wheeltec_lidar.launch.py
+       ros2 launch turn_on_wheeltec_robot wheeltec_lidar.launch.py
 
+5. 相机标定
+ros2 run camera_calibration cameracalibrator --size 11x8 --square 0.020 --no-service-check image:=/camera/color/image_raw camera:=/camera/color
+ros2 run camera_calibration cameracalibrator --size 11x8 --square 0.020 --no-service-check image:=/camera/ir/image_mono8 camera:=/camera/ir
 
 # 代码的深入理解
 
 1. 自带文档  3.ROS开发手册/2.STM32运动底盘开发手册_ROS教育机器人.pdf
 2. https://blog.csdn.net/hbsyaaa/article/details/108186892
 3. https://blog.csdn.net/lz20120808/article/details/50809397
+4. https://blog.csdn.net/qq_57061492/article/details/137344534
 
 2023.12.26更新
 
@@ -150,8 +157,6 @@ ROS2版本为galactic，默认相机设备为Astra S，若使用Astra Pro相机�
 2、打开底盘控制
 ros2 launch turn_on_wheeltec_robot turn_on_wheeltec_robot.launch.py
 
-3、打开Astra Pro相机
-ros2 launch ros2_astra_camera astra_pro_launch.py
 
 4、打开雷达
 ros2 launch turn_on_wheeltec_robot wheeltec_lidar.launch.py
