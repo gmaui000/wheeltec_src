@@ -21,12 +21,25 @@ step3:
 ros2 run camera_calibration cameracalibrator --size 11x8 --square 0.020 --no-service-check image:=/camera/color/image_raw camera:=/camera/color
 ros2 run camera_calibration cameracalibrator --size 11x8 --square 0.020 --no-service-check image:=/camera/ir/image_mono8 camera:=/camera/ir
 
+6. foxglove显示
+galactic
+sudo apt install ros-galactic-rosbridge-suite
+ros2 launch rosbridge_server rosbridge_websocket_launch.xml
+
+humble
+sudo apt install ros-humble-foxglove-bridge
+ros2 launch foxglove_bridge foxglove_bridge_launch.xml
+
+
+
+
 # 代码的深入理解
 
 1. 自带文档  3.ROS开发手册/2.STM32运动底盘开发手册_ROS教育机器人.pdf
 2. https://blog.csdn.net/hbsyaaa/article/details/108186892
 3. https://blog.csdn.net/lz20120808/article/details/50809397
 4. https://blog.csdn.net/qq_57061492/article/details/137344534
+5. https://docs.foxglove.dev/docs/connecting-to-data/frameworks/ros2/#foxglove-websocket
 
 2023.12.26更新
 
