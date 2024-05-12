@@ -60,12 +60,12 @@ class LaserFollower(Node):
 		    '/object_tracker/info',
 		    self.trackerInfoCallback,
 		    qos)
-		targetDist = self.declare_parameter('~targetDist')
+		targetDist = self.declare_parameter('~targetDist', 0.5)
 		#pid_param = self.declare_parameter('~PID_controller')
 		P = self.get_parameter('P').get_parameter_value().double_value
 		I = self.get_parameter('I').get_parameter_value().double_value
 		D = self.get_parameter('D').get_parameter_value().double_value
-		self.PID_controller = simplePID([0, 0.9], [1.6, 0.5], [0, 0], [0.03,0.005])
+		self.PID_controller = simplePID([0, targetDist.value], [1.6, 0.5], [0, 0], [0.03,0.005])
 		# PID parameters first is angular, dist
 	def trackerInfoCallback(self, info):
 		# we do not handle any info from the object tracker specifically at the moment. just ignore that we lost the object for example
