@@ -60,7 +60,7 @@ class LaserFollower(Node):
 		    '/object_tracker/info',
 		    self.trackerInfoCallback,
 		    qos)
-		targetDist = self.declare_parameter('~targetDist', 0.5)
+		targetDist = self.declare_parameter('~targetDist', 0.4)
 		#pid_param = self.declare_parameter('~PID_controller')
 		P = self.get_parameter('P').get_parameter_value().double_value
 		I = self.get_parameter('I').get_parameter_value().double_value
@@ -73,28 +73,31 @@ class LaserFollower(Node):
 	def positionUpdateCallback(self, position):
 		angle_x= position.angle_x
 		distance = position.distance
-		#print(distance)
+		#print(angle_x, distance)
 		if(angle_x>0):
 			angle_x=angle_x-3.1415
 		else :
 			angle_x=angle_x+3.1415
 
+		print(angle_x, distance)
 		# call the PID controller to update it and get new speeds
 		[uncliped_ang_speed, uncliped_lin_speed] = self.PID_controller.update([angle_x, distance])
 		# clip these speeds to be less then the maximal speed specified above
 		angularSpeed = np.clip(-uncliped_ang_speed, -0.6, 0.6)
 		linearSpeed  = np.clip(-uncliped_lin_speed, -0.6, 0.6)
+		if (abs(angle_x) > 2.8 and distance < 0.2) or (abs(angle_x) <= 2.8 and distance < 0.1):
+			linearSpeed = 0.0
 		# create the Twist message to send to the cmd_vel topic
 		velocity = Twist()	
 		velocity.linear.x = float(linearSpeed)
 		velocity.linear.y = 0.0
 		velocity.linear.z = 0.0
-		print(linearSpeed)
+		#print(linearSpeed)
 
 		velocity.angular.x = 0.0
 		velocity.angular.y = 0.0
 		velocity.angular.z = angularSpeed
-		#self.get_logger().info('linearSpeed: {}, angularSpeed: {}'.format(linearSpeed, angularSpeed))
+		self.get_logger().info('linearSpeed: {}, angularSpeed: {}'.format(linearSpeed, angularSpeed))
 		self.cmdVelPublisher.publish(velocity)
 	def buttonCallback(self, joy_data):
 		# this method gets called whenever we receive a message from the joy stick
@@ -163,9 +166,9 @@ class simplePID:
 		P, I, D (double)-- the PID parameter
 
 		'''
-		P = [1.6, 0.5]
-		I = [0, 0]
-		D = [0.03,0.005]
+		# P = [1.6, 0.5]
+		# I = [0, 0]
+		# D = [0.03,0.005]
 		node = rclpy.create_node('simplepid')
 		# check if parameter shapes are compatabile. 
 		if(not(np.size(P)==np.size(I)==np.size(D)) or ((np.size(target)==1) and np.size(P)!=1) or (np.size(target )!=1 and (np.size(P) != np.size(target) and (np.size(P) != 1)))):
@@ -202,9 +205,9 @@ class simplePID:
 		error = self.setPoint - current_value
 
 		 #when bias is little, stop moving. errpr[0]=angle(rad), error[1]=distance(mm)
-		if error[0]<0.1 and error[0]>-0.1:
+		if error[0]<0.05 and error[0]>-0.05:
 			error[0]=0
-		if error[1]<0.1 and error[1]>-0.1:
+		if error[1]<0.2 and error[1]>-0.2:
 			error[1]=0
 		
 		#when target is little, amplify velocity by amplify error.
@@ -222,7 +225,7 @@ class simplePID:
 		
 		# derivative is difference in error / time since last update
 		D = (error-self.last_error)/deltaT
-		
+		# print(P, I, D)
 		self.last_error = error
 		self.timeOfLastCall = currentTime
 		

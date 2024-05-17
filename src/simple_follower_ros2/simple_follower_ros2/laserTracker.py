@@ -87,7 +87,7 @@ class LaserTracker(Node):
 			minDistanceAngle = scan_data.angle_min + minDistanceID * scan_data.angle_increment
 			msgdata.angle_x = minDistanceAngle
 			msgdata.angle_y = 42.0
-			print(minDistanceID, minDistance)
+			print(minDistanceID, minDistanceAngle, minDistance)
 			msgdata.distance = float(minDistance)
 			# here we only have an x angle, so the y is set arbitrarily
 			self.positionPublisher.publish(msgdata)
