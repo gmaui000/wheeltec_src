@@ -14,6 +14,9 @@ step2：
        ros2 run web_video_server web_video_server
 step3:
        浏览器输入：192.168.0.131:8080
+step4:
+       IR image 转换：
+       ros2 run image_transformer image_transformer
 4. 打开雷达
        ros2 launch turn_on_wheeltec_robot wheeltec_lidar.launch.py
 
