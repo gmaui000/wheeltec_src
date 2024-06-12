@@ -13,7 +13,8 @@ step1：
 step2：
        ros2 run web_video_server web_video_server
 step3:
-       浏览器输入：192.168.0.131:8080
+       浏览器输入：http://192.168.0.131:8080
+       http://192.168.0.131:8080/stream_viewer?topic=/camera/color/image_raw&bitrate=10000&type=mjpeg
 step4:
        IR image 转换：
        ros2 run image_transformer image_transformer
